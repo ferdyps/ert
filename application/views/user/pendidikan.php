@@ -13,6 +13,7 @@
                             <option value="<?= $data->nama ?>"><?= $data->nama ?></option>
                             <?php endforeach; ?>
                         </select>
+                        
                     </div>
                     <div class="form-group">
                         <label for="Pendidikan">Pendidikan terakhir</label>
