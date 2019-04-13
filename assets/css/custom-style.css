@@ -1,0 +1,9 @@
+.custom-form {
+    border: 0;
+    border-bottom: 1px solid gray;
+    border-radius: 0;
+}
+
+.custom-form:focus {
+    box-shadow: none;
+}
