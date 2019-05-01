@@ -59,7 +59,11 @@
                           <td><?= $row['status'] ?></td>
                           <td><?= $row['jml_kendaraan'] ?></td>
                           <td><?= $row['no_paspor'] ?></td>
-                          <td><img style="width:100%" src="<?= base_url("uploads/") . $row['foto']; ?>"></td>
+                          <td>
+                            <?php if($row['foto'] != '') { ?>
+                            <img style="width:100%" src="<?= base_url("uploads/") . $row['foto']; ?>">
+                            <?php } else { echo "-"; }?>
+                          </td>
                           </tr>
                       </tbody>
                   <?php  

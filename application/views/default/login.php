@@ -14,7 +14,10 @@
                 </div>
                 <div class="form-group text-center">
                     <input type="submit" value="Submit" class="btn btn-success">
-                    <a class="btn btn-warning" href="<?= base_url('pro_login/registrasi');?>">Registrasi</a>
+                </div>
+                <div class="form-group text-center">
+                    <a class="btn btn-warning" href="<?= base_url('pro_login/registrasi');?>">Registrasi Kepala Keluarga</a>
+                    <a class="btn btn-warning" href="<?= base_url('pro_login/registrasi_anggota');?>">Registrasi Anggota Keluarga</a>
                 </div>
             </div>
             <div class="px-3 pt-2 text-center">

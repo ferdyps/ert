@@ -7,12 +7,12 @@
             $this->load->library('form_validation');
             $this->load->model('m_user');
         }
-
+//=======================================================================================================
         public function index(){
             $this->cek_session();
             $this->load->view('default/login');
         }
-
+//=======================================================================================================
         public function login(){
             $autentikasi = $this->input->post('autentikasi');
             $password = $this->input->post('password');
@@ -47,23 +47,23 @@
             }
             
         }
-
+//=======================================================================================================
         public function dashboard(){
             if(!$this->session->has_userdata('status')){
                 redirect('pro_login/','refresh');
             }
             $this->load->view('admin/dashboard');
         }
-
+//=======================================================================================================
         public function logout(){
             $this->session->sess_destroy();
             redirect('pro_login/','refresh');
         }
-
+//=======================================================================================================
         public function registrasi(){
             $this->load->view('default/registrasi');
         }
-
+//=======================================================================================================
         public function insert_registrasi(){
             $username       = $this->input->post('username');
             $email          = $this->input->post('email');
@@ -116,7 +116,47 @@
                 }
             }
         }
-
+//=======================================================================================================
+        public function registrasi_anggota(){
+            $this->load->view('default/registrasi_anggota');
+        }
+        public function insert_registrasi_anggota(){
+            $nik = $this->input->post('nik');
+            $username = $this->input->post('username');
+            $email = $this->input->post('email');
+            $password = $this->input->post('password');
+            $confirmpass = $this->input->post('confirmpass');
+            
+            $this->form_validation->set_rules([
+                [
+                    'field' => 'nik',
+                    'label' => 'NIK',
+                    'rules' => 'trim|required|numeric'
+                ],
+                [
+                    'field' => 'username',
+                    'label' => 'NIK',
+                    'rules' => 'trim|required|is_unique[user.username]|min_length[5]|max_length[12]'
+                ],
+                [
+                    'field' => 'email',
+                    'label' => 'Email',
+                    'rules' => 'trim|required|valid_email'
+                ],
+                [
+                    'field' => 'password',
+                    'label' => 'Password',
+                    'rules' => 'trim|required|min_length[8]'
+                ],
+                [
+                    'field' => 'confirmpass',
+                    'label' => 'Konfirmasi Password',
+                    'rules' => 'trim|required|min_length[8]|matches[password]'
+                ]
+            ]);
+            
+        }
+//=======================================================================================================
         private function cek_session(){
             if($this->session->userdata('status') != NULL){
                 if ($this->session->userdata('akses') == "admin") {

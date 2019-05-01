@@ -2,9 +2,15 @@
 <div class="container h-100">
     <div class="d-flex h-75 pt-4">
         <div class="shadow rounded bg-white col-md-8 col-lg-6 p-0 m-auto">
-            <h1 class="p-3 bg-success text-center text-white rounded-top">Registrasi Kepala Keluarga</h1>
-            <?= form_open('pro_login/insert_registrasi');?>
+            <h1 class="p-3 bg-success text-center text-white rounded-top">Registrasi Anggota Keluarga</h1>
+            <?= form_open('pro_login/insert_registrasi_anggota');?>
             <div class="px-3 pt-2">
+                <div class="form-group">
+                    <input type="text" name="nik" class="form-control custom-form <?php if(form_error('nik')) {echo 'is-invalid';}?>" placeholder="NIK" value="<?= set_value('nik');?>">
+                    <div class="invalid-feedback">
+                        <?= form_error('nik');?>
+                    </div>
+                </div>
                 <div class="form-group">
                     <input type="text" name="username" class="form-control custom-form <?php if(form_error('username')) {echo 'is-invalid';}?>" placeholder="Username" value="<?= set_value('username'); ?>">
                     <div class="invalid-feedback">

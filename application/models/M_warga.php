@@ -13,16 +13,21 @@ class M_warga extends CI_Model {
         WHERE u.id_user = ?";
         return $this->db->query($sql,[$id]); 
     }
-
+//==================================================================
     public function input_data($table, $data){
         return $this->db->insert($table, $data);
     }
 
+    public function edit_data($table, $pk_field, $id, $data){
+        $this->db->where($pk_field, $id);
+        return $this->db->update($table, $data);
+    }
+//==================================================================
     public function select_data($table, $pk_field, $id) {
         $this->db->where($pk_field, $id);
         return $this->db->get($table);
     }
-
+//==================================================================
     public function cek_data_warga_punya_kepala_keluarga($id){
         $sql = "
         SELECT
@@ -32,6 +37,44 @@ class M_warga extends CI_Model {
         WHERE id_user = " . $id . "
         ";
         return $this->db->query($sql);
+    }
+//==================================================================
+    public function presentasi_data_cowok(){
+        $sql = "
+        SELECT
+            kk.blok as blok,
+            (SELECT COUNT(nik)
+                FROM warga w     
+                JOIN kartu_keluarga kkk ON kkk.no_kk = w.no_kk
+                WHERE w.jk = \"laki-laki\" AND kkk.blok = kk.blok 
+            ) AS jml_laki
+        FROM
+            warga wa
+        JOIN kartu_keluarga kk ON kk.no_kk = wa.no_kk
+        GROUP BY 1
+        ";
+        return $this->db->query($sql);
+    }
+//==================================================================
+    public function presentasi_data_cewek() {
+        $sql = "
+        SELECT
+            kk.blok,
+            (SELECT COUNT(nik)
+                FROM warga w
+                JOIN kartu_keluarga kkk ON kkk.no_kk = w.no_kk
+                WHERE w.jk = \"perempuan\" AND kkk.blok = kk.blok
+            ) AS jml_perempuan
+        FROM
+            warga wa
+        JOIN kartu_keluarga kk ON kk.no_kk = wa.no_kk
+        GROUP BY 1
+        ";
+        return $this->db->query($sql);
+    }
+//==================================================================
+    public function presentasi_usia(){
+        return $this->db->query("call usia_warga()");
     }
 }
 

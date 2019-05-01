@@ -6,8 +6,13 @@
             <div class="row px-3">
                 <div class="col">
                     <div class="form-group">
+                        <label for="Nama_Lengkap">Nama Lengkap</label>
+                        <input type="text" name="nama_lengkap" class="form-control" id="NamaLengkap" value="<?= $data_pekerjaan->nama ?>" disabled>
+                        <input type="hidden" name="nama_lengkap" value="<?= $data_pekerjaan->nama ?>">
+                    </div>
+                    <div class="form-group">
                         <label for="Pekerjaan">Pekerjaan</label>
-                        <select class="form-control" name="pekerjaan" id="Pekerjaan">
+                        <select class="form-control" name="status_pekerjaan" id="Pekerjaan">
                             <option value="PNS">Pegawai Negeri Sipil</option>
                             <option value="Pegawai Swasta">Pegawai Swasta</option>
                             <option value="Wiraswasta">Wiraswasta</option>

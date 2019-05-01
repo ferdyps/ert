@@ -30,14 +30,15 @@
           <a class="dropdown-item" href="<?= base_url('pro_user/perpindahan');?>">Perpindahan</a>
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown <?php if($title == "Demografi Penduduk") { echo "active"; } ?>">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Lihat Data
+          Data Demografi 
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="<?= base_url('pro_user/view_chart_gender');?>">Demografi Penduduk</a>
           <a class="dropdown-item" href="#">Demografi Usia</a>
           <a class="dropdown-item" href="#">Demografi Profesi</a>
-          <a class="dropdown-item" href="#">Peta Perumahan</a>
+          <a class="dropdown-item" href="#"></a>
         </div>
       </li>
     </ul>

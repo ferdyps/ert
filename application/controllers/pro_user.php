@@ -18,13 +18,13 @@
             }
             // $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
         }
-
+// ====================================================================================================        
         public function cek_aja_sih(){
             $id_user = $this->session->userdata('user_id');
             $hasil = $this->m_warga->select_data('kartu_keluarga', 'id_user', $id_user)->row();
             print_r($hasil);
         }
-    
+// ====================================================================================================
         public function index(){
             $id_user = $this->session->userdata('user_id');
             $data_warga_suami = $this->m_warga->cek_data_warga_punya_kepala_keluarga($id_user)->row()->jml;
@@ -43,7 +43,7 @@
                 [
                     'field' => 'nama',
                     'label' => 'Nama Lengkap', 
-                    'rules' => 'trim|required|regex_match[/^[a-zA-Z ]/]'
+                    'rules' => 'trim|required|regex_match[/^[a-zA-Z]/]'
                 ],
                 [
                     'field' => 'telp',
@@ -53,7 +53,7 @@
                 [
                     'field' => 'tempat_lahir',
                     'label' => 'Tempat Lahir', 
-                    'rules' => 'trim|required|regex_match[/^[a-zA-Z ]/]'
+                    'rules' => 'trim|required|regex_match[/^[a-zA-Z]/]'
                 ],
                 [
                     'field' => 'tanggal_lahir',
@@ -194,70 +194,182 @@
                 $this->load->view('user/index', $data);
             }
         }
-
+// ====================================================================================================
         public function pendidikan(){
             $id_user = $this->session->userdata('user_id');
 
             $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
 
-            $cek = $this->m_warga->select_data('kartu_keluarga', 'id_user', $id_user)->row();
+            $cek = $this->m_warga->select_data('warga', 'id_user', $id_user)->row();
             
             if ($cek->valid == 0) {
                 ?>
                 <script>
-                    alert('Kartu Keluarga belum Valid..');
+                    alert('Data warga belum Valid..');
                     location = "<?= base_url('pro_user'); ?>";
                 </script>
                 <?php
             } else {
                 $data['title'] = 'Data Pendidikan';
                 $data['content'] = 'user/pendidikan';
-                $data['data_keluargaku'] = $this->m_warga->select_data('warga', 'no_kk', $cek->no_kk)->result();
+                $data['warga'] = $this->m_warga->select_data('warga', 'id_user', $id_user)->row();
                 $this->load->view('user/index', $data);
+
+                $this->form_validation->set_rules([
+                    [
+                        'field' => 'riwayat_pendidikan',
+                        'label' => 'Riwayat Pendidikan',
+                        'rules' => 'required'
+                    ],
+                    [
+                        'field' => 'nama_sekolah',
+                        'label' => 'Nama Sekolah',
+                        'rules' => 'trim|required|regex_match[/^[a-zA-Z0-9]/]'
+                    ],
+                    [
+                        'field' => 'alamat_sekolah',
+                        'label' => 'Alamat Sekolah',
+                        'rules' => 'trim|required|regex_match[/^[a-zA-Z0-9,]/]'
+                    ],
+                ]);
+
+                if ($this->input->post()) {
+                    $nama_lengkap       = $this->input->post('nama_lengkap');
+                    $riwayat_pendidikan = $this->input->post('riwayat_pendidikan');
+                    $nama_sekolah       = $this->input->post('nama_sekolah');
+                    $alamat_sekolah     = $this->input->post('alamat_sekolah');
+                    
+                    
+                    if ($this->form_validation->run() == TRUE) {
+                        $data = array(
+                            'almameter'    => $riwayat_pendidikan,
+                            'nama_sekolah'  => $nama_sekolah,
+                            'alamat_sekolah'=> $alamat_sekolah
+                        );
+                        $insertdata = $this->m_warga->input_data('pendidikan',$data);
+                        if ($insertdata) {
+                            ?>
+                            <script>
+                                alert('Data Berhasil Diinputkan');
+                                location = "<?php base_url('pro_user/pendidikan');?>";
+                            </script>
+                            <?php
+                        }else {
+                            ?>
+                            <script>
+                                alert('Data Gagal Diinputkan');
+                                location = "<?php base_url('pro_user/pendidikan');?>";
+                            </script>
+                            <?php
+                        }
+                    } else {
+                        $data['title'] = 'Data Pendidikan';
+                        $data['content'] = 'user/pendidikan';
+                        $this->load->view('user/index', $data);
+                    }
+                    
+                }
             }
         }
-
+// ====================================================================================================
         public function pekerjaan(){
             $id_user = $this->session->userdata('user_id');
 
             $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
 
-            $cek = $this->m_warga->select_data('kartu_keluarga', 'id_user', $id_user)->row();
+            $cek = $this->m_warga->select_data('warga', 'id_user', $id_user)->row();
             if ($cek->valid == 0) {
-                ?>
-                <script>
-                    alert('Kartu Keluarga belum Valid..');
-                    location = "<?= base_url('pro_user'); ?>";
-                </script>
-                <?php
+                // ?>
+                 <!-- <script>
+                //     alert('Data warga belum Valid..');
+                //     location = "<?= base_url('pro_user'); ?>";
+                // </script> --> 
+                 <?php
             } else {
                 $data['title'] = 'Pekerjaan';
                 $data['content'] = 'user/pekerjaan';
+                $data['data_pekerjaan'] = $this->m_warga->select_data('warga', 'id_user', $id_user)->row();
                 $this->load->view('user/index', $data);
+
+                $this->form_validation->set_rules([
+                    [
+                        'field' => 'status_pekerjaan',
+                        'label' => 'Pekerjaan',
+                        'rules' => 'required'
+                    ],
+                    [
+                        'field' => 'nama_perusahaan',
+                        'label' => 'Nama Perusahaan',
+                        'rules' => 'trim|required|regex_match[/^[a-zA-Z0-9]/]'
+                    ],
+                    [
+                        'field' => 'alamat_perusahaan',
+                        'label' => 'Alamat Pekerjaan',
+                        'rules' => 'trim|required|regex_match[/^[a-zA-Z0-9]/]'
+                    ]
+                ]);
+                if ($this->input->post()) {
+                    $nama = $this->input->post('nama');
+                    $status_pekerjaan = $this->input->post('status_pekerjaan');
+                    $nama_perusahaan = $this->input->post('nama_perusahaan');
+                    $alamat_perusahaan = $this->input->post('alamat_perusahaan');
+                    
+                    
+                    if ($this->form_validation->run() == TRUE) {
+                        $data = array(
+                            'nama' => $nama,
+                            'status_pekerjaan' => $status_pekerjaan,
+                            'nama_perusahaan' => $nama_perusahaan,
+                            'alamat_perusahaan' => $alamat_perusahaan
+                        );
+                        $insertdata = $this->m_warga->input_data('pekerjaan',$data);
+                        if ($insertdata) {
+                            ?>
+                            <script>
+                                alert('Data Berhasil Diinput');
+                                location = "<?php base_url('pro_user/pekerjaan');?>"
+                            </script>
+                            <?php
+                        }else {
+                            ?>
+                            <script>
+                                alert('Data Gagal Diinput');
+                                location = "<?php base_url('pro_user/pekerjaan');?>"
+                            </script>
+                            <?php
+                        }
+                    } else {
+                        $data['title'] = 'Pekerjaan';
+                        $data['content'] = 'user/pekerjaan';
+                        $this->load->view('user/index', $data);
+                        
+                    }
+                    
+                }
             }
         }
-
+// ====================================================================================================
         public function kelahiran(){
             $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
             $data['title'] = 'Kelahiran';
             $data['content'] = 'user/kelahiran';
             $this->load->view('user/index', $data);
         }
-
+// ====================================================================================================
         public function kematian(){
             $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
             $data['title'] = 'Kematian';
             $data['content'] = 'user/kematian';
             $this->load->view('user/index', $data);
         }
-
+// ====================================================================================================
         public function perpindahan(){
             $this->cek_user_data("index|pendidikan|pekerjaan|kelahiran|kematian|perpindahan");
             $data['title'] = 'Perpindahan';
             $data['content'] = 'user/perpindahan';
             $this->load->view('user/index', $data);
         }
-
+// ====================================================================================================
         public function kartu_keluarga(){
             $id_user = $this->session->userdata('user_id');
             
@@ -293,12 +405,14 @@
                     'rules' => 'trim|required|numeric'
                 ]
             ]);
-
-            $cek = $this->m_warga->select_data('kartu_keluarga', 'id_user', $id_user)->num_rows();
-            if ($cek > 0) {
+            
+            $query_data = $this->m_warga->select_data('kartu_keluarga', 'id_user', $id_user);
+            $cek = $query_data->row();
+            $count = $query_data->num_rows();
+            if ($count != 0 && $cek->valid == 0) {
                 ?>
                 <script>
-                    alert('Kartu Keluarga Sudah Terdaftar.');
+                    alert('Kartu Keluarga Belum di Validasi.');
                     location = "<?= base_url('pro_user'); ?>";
                 </script>
                 <?php
@@ -312,47 +426,101 @@
                     $rw         = $this->input->post('rw');                
                     
                     if ($this->form_validation->run() == TRUE) {
-                        $data = array(
-                            'no_kk' => $nomorKK,
-                            'jalan' => $jalan,
-                            'blok' => $blok,
-                            'no_rumah' => $nomor_rumah,
-                            'rt' => $rt,
-                            'rw' => $rw,
-                            'id_user' => $id_user
-                        );
+                        if(isset($cek)) {
+                            $data = array(
+                                'jalan' => $jalan,
+                                'blok' => $blok,
+                                'no_rumah' => $nomor_rumah,
+                                'rt' => $rt,
+                                'rw' => $rw
+                            );
+                            
+                            $isidata = $this->m_warga->edit_data('kartu_keluarga', 'id_user', $id_user, $data);
 
-                        $isidata = $this->m_warga->input_data('kartu_keluarga', $data);
-
-                        if ($isidata) {
-                            ?>
-                            <script>
-                                alert('Data berhasil ditambah..');
-                                location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
-                            </script>
-                            <?php
+                            if ($isidata) {
+                                ?>
+                                <script>
+                                    alert('Data berhasil diubah..');
+                                    location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
+                                </script>
+                                <?php
+                            } else {
+                                ?>
+                                <script>
+                                    alert('Data gagal diubah..!');
+                                    location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
+                                </script>
+                                <?php
+                            }
                         } else {
-                            ?>
-                            <script>
-                                alert('Data gagal ditambah..!');
-                                location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
-                            </script>
-                            <?php
+                            $data = array(
+                                'no_kk' => $nomorKK,
+                                'jalan' => $jalan,
+                                'blok' => $blok,
+                                'no_rumah' => $nomor_rumah,
+                                'rt' => $rt,
+                                'rw' => $rw,
+                                'id_user' => $id_user
+                            );
+
+                            $isidata = $this->m_warga->input_data('kartu_keluarga', $data);
+
+                            if ($isidata) {
+                                ?>
+                                <script>
+                                    alert('Data berhasil ditambah..');
+                                    location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
+                                </script>
+                                <?php
+                            } else {
+                                ?>
+                                <script>
+                                    alert('Data gagal ditambah..!');
+                                    location = "<?= base_url('pro_user/kartu_keluarga'); ?>";
+                                </script>
+                                <?php
+                            }
                         }
-                        
                     } else {
                         $data['title'] = 'Input Kartu Keluarga';
                         $data['content'] = 'user/kartu_keluarga';
                         $this->load->view('user/index', $data);
                     }
                 } else {
+                    if ($count != 0) {
+                        if ($cek->valid == 1) {
+                            $data['listData'] = $cek;
+                        }
+                    }
                     $data['title'] = 'Input Kartu Keluarga';
                     $data['content'] = 'user/kartu_keluarga';
                     $this->load->view('user/index', $data);
                 }
             }
         }
+// ====================================================================================================
+        public function view_chart_gender(){
+            $dataPoints_cowok = array();
+            $dataPoints_cewek = array();
 
+            $result_cowok = $this->m_warga->presentasi_data_cowok()->result();
+            foreach($result_cowok as $row) {
+                array_push($dataPoints_cowok, array('label' => $row->blok, 'y' => $row->jml_laki));
+            }
+            $data['dataPoints_cowok'] = $dataPoints_cowok;
+
+            $result_cewek = $this->m_warga->presentasi_data_cewek()->result();
+            foreach($result_cewek as $row) {
+                array_push($dataPoints_cewek, array('label' => $row->blok, 'y' => $row->jml_perempuan));
+            }
+            $data['dataPoints_cewek'] = $dataPoints_cewek;
+
+            $data['title'] = 'Demografi Penduduk';
+            $data['content'] = 'user/diagram_gender';
+            $this->load->view('user/index', $data);
+        }
+
+// ====================================================================================================
         private function cek_user_data($methods){
             $id_user = $this->session->userdata('user_id');
 

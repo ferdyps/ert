@@ -44,7 +44,7 @@
         </li>
         <li class=" <?php if($title == "Tabel Kartu Keluarga") { echo "active"; } ?>">
           <a href="<?= base_url('pro_admin/tabel_kk_valid');?>">
-            <i class="fa fa-table"></i><span>Konfirmasi Kartu Keluarga</span>
+            <i class="fa fa-table"></i><span>Kartu Keluarga</span>
           </a>
         </li>
       </ul>

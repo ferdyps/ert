@@ -2,21 +2,17 @@
     <div class="row bg-white rounded shadow">
         <div class="col px-0">
             <h1 class="bg-success rounded-top text-white p-2 text-center">Riwayat Pendidikan</h1>
-            <?= form_open('c_warga/input_pendidikan');?>
+            <?= form_open();?>
             <div class="row px-3">
                 <div class="col">
                     <div class="form-group">
-                        <label for="NamaSekolah">Nama Lengkap</label>
-                        <input type="text" name="nama_sekolah" id="NamaSekolah" class="form-control" placeholder="Nama Sekolah/Universitas">
-                        <select name="riwayat_pend" id="Pendidikan" class="form-control">
-                            <?php foreach($data_keluargaku as $data): ?>
-                            <option value="<?= $data->nama ?>"><?= $data->nama ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <label for="NamaLengkap">Nama Lengkap</label>
+                        <input type="text" name="nama_lengkap" class="form-control" id="NamaLengkap" value="<?= $warga->nama ?>" disabled>
+                        <input type="hidden" name="nama_lengkap" value="<?= $warga->nama ?>">
                     </div>
                     <div class="form-group">
                         <label for="Pendidikan">Pendidikan terakhir</label>
-                        <select name="riwayat_pend" id="Pendidikan" class="form-control">
+                        <select name="riwayat_pendidikan" id="Pendidikan" class="form-control">
                             <option value="SD">SD</option>
                             <option value="SMP/SLTP">SMP/SLTP</option>
                             <option value="SMA/SLTA/SMK">SMA/SLTA/SMK</option>
